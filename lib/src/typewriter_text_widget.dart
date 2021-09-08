@@ -2,26 +2,27 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class TypewriterTextAnimation extends StatefulWidget {
+class TypewriterTextWidget extends StatefulWidget {
   final String text;
   final TextStyle? textStyle;
   final int millisecondsPerLetter;
+  final Function? onComplete;
 
-  const TypewriterTextAnimation({
+  const TypewriterTextWidget({
     Key? key,
     required this.millisecondsPerLetter,
     required this.text,
     this.textStyle,
+    this.onComplete,
   }) : super(
-    key: key,
-  );
+          key: key,
+        );
 
   @override
-  _TypewriterTextAnimationState createState() =>
-      _TypewriterTextAnimationState();
+  _TypewriterTextWidgetState createState() => _TypewriterTextWidgetState();
 }
 
-class _TypewriterTextAnimationState extends State<TypewriterTextAnimation>
+class _TypewriterTextWidgetState extends State<TypewriterTextWidget>
     with SingleTickerProviderStateMixin {
   final int cursorCount = 8;
 
@@ -42,7 +43,14 @@ class _TypewriterTextAnimationState extends State<TypewriterTextAnimation>
     textAnimation = IntTween(
       begin: 0,
       end: widget.text.length + cursorCount,
-    ).animate(animationController);
+    ).animate(animationController)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          if (widget.onComplete != null) {
+            widget.onComplete!();
+          }
+        }
+      });
 
     animationController.forward();
   }
