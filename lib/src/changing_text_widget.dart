@@ -9,12 +9,14 @@ class ChangingTextWidget extends StatefulWidget {
   final int letterSwitchCount;
   final bool changeRandomly;
   final Function? onComplete;
+  final TextStyle? textStyle;
 
   const ChangingTextWidget({
     Key? key,
     required this.text,
+    this.textStyle,
     this.letters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#\$%&",
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#\$%&",
     this.letterChangeTime = 50,
     this.letterSwitchCount = 50,
     this.changeRandomly = true,
@@ -52,12 +54,12 @@ class _ChangingTextWidgetState extends State<ChangingTextWidget>
         milliseconds: widget.letterChangeTime * widget.letterSwitchCount,
       ),
     )..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (widget.onComplete != null) {
-          widget.onComplete!();
+        if (status == AnimationStatus.completed) {
+          if (widget.onComplete != null) {
+            widget.onComplete!();
+          }
         }
-      }
-    });
+      });
 
     textAnimation = StepTween(
       begin: 0,
@@ -83,10 +85,7 @@ class _ChangingTextWidgetState extends State<ChangingTextWidget>
 
         return Text(
           str,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 30,
-          ),
+          style: widget.textStyle,
         );
       },
     );
